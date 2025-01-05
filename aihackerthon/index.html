@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Real-Time Threat Intelligence</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background: #162447;
+            border-radius: 10px;
+            padding: 20px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .container h1 {
+            margin-bottom: 20px;
+            color: #e43f5a;
+        }
+
+        .container input {
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .container button {
+            background-color: #e43f5a;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .container button:hover {
+            background-color: #d62948;
+        }
+
+        .results {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #f5f5f5;
+            background-color: #1f4068;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Threat Intelligence Platform</h1>
+        <input type="text" id="inputField" placeholder="Enter IP or Domain" />
+        <button onclick="getThreatInfo()">Analyze</button>
+
+        <div class="results" id="results">
+            <!-- Results will appear here -->
+        </div>
+    </div>
+
+    <script>
+        async function getThreatInfo() {
+            const input = document.getElementById('inputField').value;
+            const resultsDiv = document.getElementById('results');
+
+            if (!input) {
+                resultsDiv.innerHTML = "<p>Please enter an IP or domain to analyze.</p>";
+                return;
+            }
+
+            resultsDiv.innerHTML = "<p>Analyzing... Please wait.</p>";
+
+            try {
+                // Replace with a real threat intelligence API (e.g., VirusTotal or IPQualityScore)
+                const apiKey = 'YOUR_API_KEY_HERE'; // Replace with your actual API key
+                const apiUrl = `https://api.ipqualityscore.com/api/json/ip/${apiKey}/${input}`; // Example URL
+
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                // Check if the data is valid and display it
+                if (data) {
+                    resultsDiv.innerHTML = `
+                        <p><strong>Input:</strong> ${input}</p>
+                        <p><strong>Status:</strong> ${data.is_threat ? 'Suspicious' : 'Safe'}</p>
+                        <p><strong>Confidence:</strong> ${data.confidence || 'N/A'}</p>
+                        <p><strong>Threat Type:</strong> ${data.threat_type || 'None'}</p>
+                        <p><strong>Additional Info:</strong> ${data.info || 'No additional information available'}</p>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = "<p>No threat information found.</p>";
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = "<p>Failed to retrieve threat information. Please try again later.</p>";
+            }
+        }
+    </script>
+</body>
+</html>
