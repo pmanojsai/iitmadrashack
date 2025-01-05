@@ -15,6 +15,51 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden; /* Hide scrollbars */
+            position: relative;
+        }
+
+        /* 3D Background */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1a1a2e, #162447);
+            animation: moveBackground 15s infinite linear, rotateBackground 10s infinite linear;
+            transform-style: preserve-3d;
+            z-index: -1;
+        }
+
+        @keyframes moveBackground {
+            0% {
+                transform: rotateX(15deg) rotateY(15deg) translateZ(-300px);
+            }
+            50% {
+                transform: rotateX(0deg) rotateY(45deg) translateZ(-500px);
+            }
+            100% {
+                transform: rotateX(15deg) rotateY(15deg) translateZ(-300px);
+            }
+        }
+
+        @keyframes rotateBackground {
+            0% {
+                transform: rotateX(15deg) rotateY(15deg);
+            }
+            25% {
+                transform: rotateX(30deg) rotateY(30deg);
+            }
+            50% {
+                transform: rotateX(45deg) rotateY(45deg);
+            }
+            75% {
+                transform: rotateX(30deg) rotateY(30deg);
+            }
+            100% {
+                transform: rotateX(15deg) rotateY(15deg);
+            }
         }
 
         .container {
@@ -23,6 +68,7 @@
             border-radius: 10px;
             padding: 20px 30px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1; /* Keep the content above the background */
         }
 
         .container h1 {
@@ -66,6 +112,8 @@
     </style>
 </head>
 <body>
+    <div class="background"></div> <!-- 3D background element -->
+
     <div class="container">
         <h1>Threat Intelligence Platform</h1>
         <input type="text" id="inputField" placeholder="Enter IP or Domain" />
@@ -89,25 +137,32 @@
             resultsDiv.innerHTML = "<p>Analyzing... Please wait.</p>";
 
             try {
-                // Replace with a real threat intelligence API (e.g., VirusTotal or IPQualityScore)
-                const apiKey = 'YOUR_API_KEY_HERE'; // Replace with your actual API key
-                const apiUrl = `https://api.ipqualityscore.com/api/json/ip/${apiKey}/${input}`; // Example URL
-
-                const response = await fetch(apiUrl);
+                // Example API: Replace with a real threat intelligence API
+                const response = await fetch(`https://jsonplaceholder.typicode.com/posts/1`);
                 const data = await response.json();
 
-                // Check if the data is valid and display it
-                if (data) {
-                    resultsDiv.innerHTML = `
-                        <p><strong>Input:</strong> ${input}</p>
-                        <p><strong>Status:</strong> ${data.is_threat ? 'Suspicious' : 'Safe'}</p>
-                        <p><strong>Confidence:</strong> ${data.confidence || 'N/A'}</p>
-                        <p><strong>Threat Type:</strong> ${data.threat_type || 'None'}</p>
-                        <p><strong>Additional Info:</strong> ${data.info || 'No additional information available'}</p>
-                    `;
-                } else {
-                    resultsDiv.innerHTML = "<p>No threat information found.</p>";
-                }
+                // Simulated output (replace with real API results)
+                const simulatedData = {
+                    input: input,
+                    status: "Suspicious",
+                    confidence: "85%",
+                    threats: [
+                        "Phishing",
+                        "Malware Distribution",
+                        "Botnet Activity"
+                    ]
+                };
+
+                // Display results
+                resultsDiv.innerHTML = `
+                    <p><strong>Input:</strong> ${simulatedData.input}</p>
+                    <p><strong>Status:</strong> ${simulatedData.status}</p>
+                    <p><strong>Confidence:</strong> ${simulatedData.confidence}</p>
+                    <p><strong>Threats:</strong></p>
+                    <ul>
+                        ${simulatedData.threats.map(threat => `<li>${threat}</li>`).join('')}
+                    </ul>
+                `;
             } catch (error) {
                 console.error('Error:', error);
                 resultsDiv.innerHTML = "<p>Failed to retrieve threat information. Please try again later.</p>";
